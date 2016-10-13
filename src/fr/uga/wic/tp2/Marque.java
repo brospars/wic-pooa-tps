@@ -6,44 +6,53 @@ public class Marque extends NoeudAbstrait {
 	}
 	@Override
 	public boolean contient(String s) {
-		if(s.equals("")){
-			return true;
-		}else if(this.frere != null){
-			return this.frere.contient(s);
-		}else{
-			return false;
-		}
+		return s.isEmpty() || (frere != null && frere.contient(s));
 	}
 
 	@Override
 	public boolean prefixe(String s) {
-		if(this.frere != null){
-			return this.frere.prefixe(s);
-		}
-		return false;
+		return s.isEmpty() || (frere != null && frere.prefixe(s));
 	}
 
 	@Override
 	public int nbMots() {
-		int nbfreres = 0;
 		
 		if(this.frere != null){
-			nbfreres = this.frere.nbMots();
+			return 1+this.frere.nbMots();
 		}
 		
-		return 1+nbfreres;
+		return 1;
 	}
 
 	@Override
 	public NoeudAbstrait ajout(String s) {
-		// TODO Auto-generated method stub
-		return null;
+		NoeudAbstrait n;
+		if(s.isEmpty()){
+			return this;
+		}
+		if(this.frere == null){
+			n = new Marque(null);
+			for(int i=s.length() - 1; i >=0 ; i--){
+				n = new Noeud(null,n,s.charAt(i));
+			}
+			this.frere = n;
+			return this;
+		}
+		
+		this.frere = this.frere.ajout(s);
+		return this;
 	}
 
 	@Override
 	public NoeudAbstrait suppr(String s) {
-		// TODO Auto-generated method stub
-		return null;
+		NoeudAbstrait n;
+		if(s.isEmpty()){
+			return this.frere;
+		}
+		if(this.frere != null){
+			this.frere = this.frere.suppr(s);
+		}
+		return this;
 	} 
 
 	@Override

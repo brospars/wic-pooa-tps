@@ -6,8 +6,12 @@ public class Noeud extends NoeudAbstrait {
 	
 	public Noeud(NoeudAbstrait frere, NoeudAbstrait fils, char valeur){
 		super(frere);
+		if(fils == null)
+			throw new IllegalArgumentException("Un noeud à forcement un fils");
+		
 		this.fils = fils;
 		this.valeur = valeur;
+		
 	}
 	
 	@Override
@@ -25,39 +29,63 @@ public class Noeud extends NoeudAbstrait {
 		if(this.frere == null) {
 			return  false;
 		}
-		return this.frere.contient(s.substring(1));
+		return this.frere.contient(s);
 	}
 
 	@Override
 	public boolean prefixe(String s) {
 		if(s.isEmpty()){
 			return true;
-		}else if (s.charAt(0) == this.valeur){
-			return this.fils.prefixe(s.substring(1));
-		} else if(this.frere != null) {
-			return  this.frere.prefixe(s.substring(1));
-		}else{
+		}
+		char c = s.charAt(0);
+		if (c < valeur){
 			return false;
 		}
+		if (c == this.valeur){
+			return this.fils.prefixe(s.substring(1));
+		}
+		if(this.frere == null) {
+			return  false;
+		}
+		return this.frere.prefixe(s);
 	}
 
 	@Override
 	public int nbMots() {
-		int nbfils = 0, nbfreres = 0;
-		
 		if(this.frere != null){
-			nbfreres = this.frere.nbMots();
+			return this.fils.nbMots() + this.frere.nbMots();
 		}
-		if(this.fils != null){
-			nbfils = this.fils.nbMots();
-		}
-		return nbfils+nbfreres;
+		return this.fils.nbMots();
 	}
 
 	@Override
 	public NoeudAbstrait ajout(String s) {
-		// TODO Auto-generated method stub
-		return null;
+		if(s.isEmpty()){
+			return new Marque(this);
+		}
+		NoeudAbstrait n;
+		char c = s.charAt(0);
+		if (c < this.valeur){
+			n = new Marque(null);
+			for(int i=s.length(); i>=0 ; i--)
+				n = new Noeud(null, n, s.charAt(i));
+			n.frere = this;
+			return n;
+		}
+		if (c == this.valeur){
+			this.fils = this.fils.ajout(s.substring(1));
+			return this;
+		}
+		// c > valeur
+		if(this.frere == null) {
+			n = new Marque(null);
+			for(int i=s.length(); i>=0 ; i--)
+				n = new Noeud(null, n, s.charAt(i));
+			this.frere = n;
+			return this;
+		}		
+		this.frere = frere.ajout(s);
+		return this;
 	}
 
 	@Override
