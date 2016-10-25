@@ -1,7 +1,7 @@
 package fr.uga.wic.tp2;
 
-public class Marque extends NoeudAbstrait {
-	public Marque(NoeudAbstrait frere){
+public class NoeudVide extends NoeudAbstrait {
+	public NoeudVide(NoeudAbstrait frere){
 		super(frere);
 	}
 	@Override
