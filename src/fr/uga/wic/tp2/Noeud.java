@@ -67,7 +67,7 @@ public class Noeud extends NoeudAbstrait {
 		char c = s.charAt(0);
 		if (c < this.valeur){
 			n = new Marque(null);
-			for(int i=s.length(); i>=0 ; i--)
+			for(int i=s.length()-1; i>=0 ; i--)
 				n = new Noeud(null, n, s.charAt(i));
 			n.frere = this;
 			return n;
@@ -79,7 +79,7 @@ public class Noeud extends NoeudAbstrait {
 		// c > valeur
 		if(this.frere == null) {
 			n = new Marque(null);
-			for(int i=s.length(); i>=0 ; i--)
+			for(int i=s.length()-1; i>=0 ; i--)
 				n = new Noeud(null, n, s.charAt(i));
 			this.frere = n;
 			return this;
@@ -96,18 +96,12 @@ public class Noeud extends NoeudAbstrait {
 
 	@Override
 	public String toString() {
-		/*String str = ""+this.valeur;
-		String strfrere = "";
-		String strfils = "";
-		
-		if(this.frere != null){
-			strfrere = this.frere.toString();
-		}
-		if(this.fils != null){
-			strfils = this.fils.toString();
-		}
-		*/
-		return null;
+		return this.toString("");
+	}
+
+	@Override
+	public String toString(String s) {
+		return this.fils.toString(s+valeur)+(frere == null ? "" : this.frere.toString(s));
 	}
 
 }
